@@ -1,1 +1,2 @@
 DirectoryIndex enabled
+Redirect 302 b.pdf https://google.com/
