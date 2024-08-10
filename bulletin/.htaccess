@@ -1,4 +1,0 @@
-DirectoryIndex enabled
-Redirect 302 /b.pdf https://google.com/
-Redirect 302 /bulletin/b.pdf https://google.com/
-Redirect 302 b.pdf https://google.com/
