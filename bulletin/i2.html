@@ -8,36 +8,40 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@latest/babel.min.js"></script>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/react-bootstrap@next/dist/react-bootstrap.min.js" async
-        crossorigin></script>
-
-
-    <script>var Alert = ReactBootstrap.Alert;</script>
+    <script src="https://cdn.jsdelivr.net/npm/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-thumbnail.js"></script>
 </head>
 
 <body>
     <h1>Mt Vernon Bulletins</h1>
     <p>Each week the worship bulletin is published in PDF format.</p>
     <div id="root"></div>
+
     <script type="text/babel">
-        const { Container, Row, Col } = ReactBootstrap;
+        const { Container, Row, Col, Card, Image } = ReactBootstrap;
+        console.log(PdfThumbnail);
+        const { fromFile } = PdfThumbnail;
 
         // A single item in the list
         function Item({ item }) {
             const url = item.name.split('/').pop();
+            const name = item.name
+                .replace(/-Bulletin-Mt.*non(-UMC)?/, "")
+                .replace(".pdf", "");
 
             return (
-                <Row>
-                    <Col>
-                        <a href={url}>{
-                            item.name
-                                .replace(/-Bulletin-Mt.*non(-UMC)?/, "")
-                                .replace(".pdf", "")}</a>
-                    </Col>
-                </Row>
+                <Col className="text-center">
+                    <Card style={{ width: '8rem' }} className="mb-5">
+                        <Card.Img variant="top" src="https://www.gravatar.com/avatar/b1ee0402d24625f555c25ea8511aad31?s=48&d=identicon&r=PG" />
+                        <Card.Body>
+                            <Card.Text>
+                                <a href={url}>{item.name}</a>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                </Col>
             );
+
         }
 
         // Filter the data to only include .md and .pdf files
@@ -49,14 +53,6 @@
                 ...data.filter(item => item.path.endsWith('.md')),
                 ...pdfs
             ]
-        }
-
-        // Add label attribute to the data
-        function addLabel(data) {
-            return data.map(item => {
-                const label = item.name.replace(/-Mt.*UMC/, "");
-                return { ...item, label };
-            });
         }
 
         function App() {
@@ -72,9 +68,11 @@
 
             return (
                 <Container>
-                    {itemList(data).map(item => <Item item={item} />)}
+                    <Row>
+                        {itemList(data).map(item => <Item key={item.path} item={item} />)}
+                    </Row>
                 </Container>
-            );
+            )
         }
 
         const container = document.getElementById('root');
