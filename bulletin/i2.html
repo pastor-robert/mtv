@@ -12,8 +12,8 @@
     <div id="root"></div>
     <script type="text/babel">
 
+        // A single item in the list
         function Item({ item }) {
-            // get the final part of the URL
             const url = item.html_url.split('/').pop();
 
             return (
@@ -23,10 +23,13 @@
             );
         }
 
+        // Filter the data to only include .md and .pdf files
+        // Puts the .md files first
         function itemList(data) {
-            const md = data.filter(item => item.path.endsWith('.md'));
-            const pdf = data.filter(item => item.path.endsWith('.pdf'));
-            return [...md, ...pdf];
+            return [
+                ...data.filter(item => item.path.endsWith('.md')),
+                ...data.filter(item => item.path.endsWith('.pdf'))
+            ]
         }
 
         function App() {
