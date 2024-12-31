@@ -1,26 +1,33 @@
-// Babel react-dom program to fetch data from a server and display it in a list
-
 <html>
-    <head>
-        <title>React Fetch Data</title>
-        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-        <script src="https://unpkg.com/babel-standalone@latest/babel.min.js"></script>
-    </head>
-    <body>
-        <div id="root"></div>
-        <script type="text/babel">
 
-            function Item({ item }) {
-                // get the final part of the URL
-                const url = item.html_url.split('/').pop();
-            
-                return (
-                    <li key={item.sha}>
-                        <a href={url}>{item.name}</a>
-                    </li>
-                );
-            }
+<head>
+    <title>React Fetch Data</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@latest/babel.min.js"></script>
+</head>
+
+<body>
+    <h1>Mt Vernon Bulletins</h1>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        function Item({ item }) {
+            // get the final part of the URL
+            const url = item.html_url.split('/').pop();
+
+            return (
+                <li key={item.sha}>
+                    <a href={url}>{item.name}</a>
+                </li>
+            );
+        }
+
+        function itemList(data) {
+            const md = data.filter(item => item.path.endsWith('.md'));
+            const pdf = data.filter(item => item.path.endsWith('.pdf'));
+            return [...md, ...pdf];
+        }
 
         function App() {
             const [data, setData] = React.useState([]);
@@ -31,39 +38,19 @@
                 fetch('https://api.github.com/repos/pastor-robert/mtv/contents/bulletin')
                     .then(response => response.json())
                     .then(data => setData(data));
-                }, []);
+            }, []);
 
             return (
                 <ul>
-                    <li key="foo">{JSON.stringify(data[0])}</li>
-                    {data.map(item => <Item item={item} />)}
+                    {itemList(data).map(item => <Item item={item} />)}
                 </ul>
             );
         }
-        //     state = {
-        //     data: []
-        //     }
-    
-        //     componentDidMount() {
-        //     fetch('https://jsonplaceholder.typicode.com/posts')
-        //         .then(response => response.json())
-        //         .then(data => this.setState({ data }))
-        //     }
-    
-        //     render() {
-        //     return (
-        //         <ul>
-        //         {this.state.data.map(post => (
-        //             <li key={post.id}>{post.title}</li>
-        //         ))}
-        //         </ul>
-        //     )
-        //     }
-        // }
 
         const container = document.getElementById('root');
         const root = ReactDOM.createRoot(container);
         root.render(<App />);
-        </script>
-    </body>
+    </script>
+</body>
+
 </html>
