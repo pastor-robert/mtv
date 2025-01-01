@@ -96,7 +96,7 @@
 		console.log(JSON.stringify({url:url, pathname:url.pathname, split:url.pathname.split('/'),
 		slice: url.pathname.split('/').slice(1),
 		join: url.pathname.split('/').slice(1).join('/')}))
-		const path = url.pathname.replace(/^[/]*(mtv|bfumc)[/]/, "");
+		const path = url.pathname.replace(/^[/]?\(mtv|bfumc\)[/]/, "");
                 console.log({ path: path });
                 fetch(`https://api.github.com/repos/pastor-robert/mtv/contents/${path}`)
                     .then(response => response.json())
