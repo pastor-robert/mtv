@@ -92,7 +92,11 @@
                 // Using the github API, get all of the entries
                 // in https://pastor-robert/mtv/bulletins
                 const url = new URL(window.location.href);
-                const path = url.pathname.split('/').slice(1).join('/');
+                const xpath = url.pathname.split('/').slice(1).join('/');
+		console.log(JSON.stringify({url:url, pathname:url.pathname, split:url.pathname.split('/'),
+		slice: url.pathname.split('/').slice(1),
+		join: url.pathname.split('/').slice(1).join('/')}))
+		const path = url.pathname.replace(/^[/]*(mtv|bfumc)[/]/, "");
                 console.log({ path: path });
                 fetch(`https://api.github.com/repos/pastor-robert/mtv/contents/${path}`)
                     .then(response => response.json())
