@@ -92,7 +92,8 @@
                 // Using the github API, get all of the entries
                 // in https://pastor-robert/mtv/bulletins
                 const url = new URL(window.location.href);
-                fetch(`https://api.github.com/repos/pastor-robert/mtv/contents/${url.pathname}`)
+                const path = url.pathname.split('/').slice(1).join('/');
+                fetch(`https://api.github.com/repos/pastor-robert/mtv/contents/${path}`)
                     .then(response => response.json())
                     .then(data => setData(data));
             }, []);
