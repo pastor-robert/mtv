@@ -28,7 +28,6 @@
         function cardImg(item) {
             name = item.name.split('/').pop()
             if (item.type === 'dir') {
-	        return null;
                 return <Card.Img variant="top" src="/bulletin/folder.png" />;
             }
             if (name.endsWith('.pdf')) {
