@@ -21,20 +21,32 @@
     <script type="text/babel">
         const { Container, Row, Col, Card, Image } = ReactBootstrap;
 
-        function cardImg(url) {
-            if (url.endsWith('.pdf')) {
-                const url2 = url.replace(/\.pdf$/, ".png");
-                return <Card.Img variant="top" src={url2} />
+        // A list of filenames
+        const filenames = [];
+
+        // Determine the image to use for the card
+        function cardImg(item) {
+            name = item.name.split('/').pop()
+            if (item.type === 'dir') {
+                return <Card.Img variant="top" src="/bulletin/folder.png" />
             }
-            return
+            if (name.endsWith('.pdf')) {
+                const png = item.name.replace(/\.pdf$/, ".png");
+                if (filenames.includes(png)) {
+                    return <Card.Img variant="top" src={png} />
+                }
+            }
+            return <Card.Img variant="top" src="file.png" />
         }
-
-
 
         // A single item in the list
         function Item({ item }) {
             const url = item.name.split('/').pop();
             const name = item.name
+                .replace("-Bulletin", "")
+                .replace("-Mt-Vernon-UMC", "")
+                .replace("-Mt-Vernon", "")
+                .replace("-MtV", "")
                 .replace(/-Bulletin-Mt.*non(-UMC)?/, "")
                 .replace(".pdf", "")
                 .replace(".md", "");
@@ -43,7 +55,7 @@
                 <Col className="text-center">
                     <a href={url}>
                         <Card style={{ width: '8rem' }} className="mb-5">
-                            {cardImg(url)}
+                            {cardImg(item)}
                             <Card.Body>
                                 <Card.Text>{name}</Card.Text>
                             </Card.Body>
@@ -54,15 +66,23 @@
 
         }
 
-        // Filter the data to only include .md and .pdf files
-        // Puts the .md files first
+        // Gather whatever data is required from
+        // the list of items, then filter out what
+        // we don't need.
+        // Return the list of items in a useful order.
         function itemList(data) {
+            data.forEach(item => filenames.push(item.name));
+
+            const subdirs = data
+                .filter(
+                    item => item.type === 'dir'
+                        && !item.name.startsWith('.'))
+                .sort((b, a) => a.path.localeCompare(b.path));
             const pdfs = data.filter(item => item.path.endsWith('.pdf'))
                 .sort((b, a) => a.path.localeCompare(b.path));
-            return [
-                ...data.filter(item => item.path.endsWith('.md')),
-                ...pdfs
-            ]
+            const mds = data.filter(item => item.path.endsWith('.md'))
+                .sort((a, b) => a.path.localeCompare(b.path));
+            return [...subdirs, ...mds, ...pdfs]
         }
 
         function App() {
@@ -71,7 +91,8 @@
             React.useEffect(() => {
                 // Using the github API, get all of the entries
                 // in https://pastor-robert/mtv/bulletins
-                fetch('https://api.github.com/repos/pastor-robert/mtv/contents/bulletin')
+                const url = new URL(window.location.href);
+                fetch(`https://api.github.com/repos/pastor-robert/mtv/contents/${url.pathname}`)
                     .then(response => response.json())
                     .then(data => setData(data));
             }, []);
