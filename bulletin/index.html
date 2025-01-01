@@ -93,6 +93,7 @@
                 // in https://pastor-robert/mtv/bulletins
                 const url = new URL(window.location.href);
                 const path = url.pathname.split('/').slice(1).join('/');
+                console.log({ path: path });
                 fetch(`https://api.github.com/repos/pastor-robert/mtv/contents/${path}`)
                     .then(response => response.json())
                     .then(data => setData(data));
