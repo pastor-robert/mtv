@@ -19,6 +19,16 @@
     <script type="text/babel">
         const { Container, Row, Col, Card, Image } = ReactBootstrap;
 
+        function cardImg(url) {
+            if (url.endsWith('.pdf')) {
+                const url2 = url.replace(/\.pdf$/, ".png");
+                return <Card.Img variant="top" src={url2} />
+            }
+            return <Card.Img variant="top" src="https://www.gravatar.com/avatar/b1ee0402d24625f555c25ea8511aad31?s=48&d=identicon&r=PG" />
+        }
+
+
+
         // A single item in the list
         function Item({ item }) {
             const url = item.name.split('/').pop();
@@ -29,8 +39,7 @@
             return (
                 <Col className="text-center">
                     <Card style={{ width: '8rem' }} className="mb-5">
-                        <Card.Img variant="top" src="https://www.gravatar.com/avatar/b1ee0402d24625f555c25ea8511aad31?s=48&d=identicon&r=PG" />
-                        <Card.Body>
+                        {cardImg(url)}                        <Card.Body>
                             <Card.Text>
                                 <a href={url}>{name}</a>
                             </Card.Text>
