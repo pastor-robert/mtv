@@ -92,24 +92,34 @@
                 // Using the github API, get all of the entries
                 // in https://pastor-robert/mtv/bulletins
                 const url = new URL(window.location.href);
-                const xpath = url.pathname.split('/').slice(1).join('/');
-		console.log(JSON.stringify({url:url, pathname:url.pathname, split:url.pathname.split('/'),
-		slice: url.pathname.split('/').slice(1),
-		join: url.pathname.split('/').slice(1).join('/')}))
-		const path = url.pathname.replace(/^[/]?(mtv|bfumc)[/]/, "");
-                console.log({ path: path });
+                const path = url.pathname.replace(/^[/]?(mtv|bfumc)[/]/, "");
                 fetch(`https://api.github.com/repos/pastor-robert/mtv/contents/${path}`)
                     .then(response => response.json())
                     .then(data => setData(data));
             }, []);
 
-            return (
+            return <div>
+                <style type="text/css">
+                    {`
+                .card-img-top {
+                    border-bottom-style: solid;
+                    border-bottom-width: var(--bs-card-border-width);
+                    border-bottom-color: var(--bs-card-border-color);
+                }
+                .card-body {
+                    border-top-style: xsolid;
+                    border-top-width: var(--bs-card-border-width);
+                    border-top-color: var(--bs-card-border-color);
+                }
+                `}
+                </style>
+
                 <Container>
                     <Row>
                         {itemList(data).map(item => <Item key={item.path} item={item} />)}
                     </Row>
                 </Container>
-            )
+            </div>;
         }
 
         const container = document.getElementById('root');
