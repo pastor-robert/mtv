@@ -82,7 +82,7 @@
                 .sort((b, a) => a.path.localeCompare(b.path));
             const mds = data.filter(item => item.path.endsWith('.md'))
                 .sort((a, b) => a.path.localeCompare(b.path));
-            return [...subdirs, ...mds, ...pdfs]
+            return [...mds, ...pdfs, ...subdirs]
         }
 
         function App() {
